@@ -97,8 +97,7 @@ resumely-local/
 ├── scripts/
 │   └── npm-in-dir.js          Helper for running npm in subdirectories
 ├── package.json               Root scripts for running both servers
-├── render.yaml                Render deployment blueprint
-└── START_HERE.md              Quick start guide
+
 
 ```
 
