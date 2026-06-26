@@ -1,197 +1,110 @@
-# Resumely — AI Career Intelligence Platform
+# Resumely - AI Career Intelligence Platform
 
-Full-stack resume analysis app: **React frontend** + **Node/Express backend** + **MongoDB Atlas**.
+An intelligent full-stack web app that analyzes resumes, matches job roles, and provides AI-powered career feedback using React, Node.js, MongoDB Atlas, and Groq AI (LLaMA 3).
 
 ---
 
-## Local development
+## Features
 
-### 1. Install dependencies
+- Resume Upload and Parsing - Upload PDF resumes and extract skills, experience, and education automatically
+- AI Resume Analysis - Get AI-powered scores, feedback, and improvement suggestions powered by LLaMA 3
+- Job Role Matching - Match your resume against 50+ job roles and see your fit percentage
+- Dashboard and Progress Tracking - Visual charts showing resume score trends over time
+- Resume Comparator - Compare two resumes side by side with AI insights
+- AI Bullet Rewriter - Rewrite weak resume bullet points into strong, impactful ones
+- Secure Authentication - JWT-based login, signup, and password reset
+- Responsive Design - Works on desktop and mobile
 
-From the project root (`resumely_fixed/`):
+---
 
+## Tech Stack
+
+| Layer      | Technology                                      |
+|------------|-------------------------------------------------|
+| Frontend   | React 18, React Router v6, Recharts, Axios      |
+| Backend    | Node.js, Express.js                             |
+| Database   | MongoDB Atlas (Mongoose ODM)                    |
+| AI         | Groq API - LLaMA 3 (8B) - Free tier            |
+| Auth       | JWT (JSON Web Tokens) + bcrypt                  |
+| File       | Multer + pdf-parse                              |
+| Deployment | Vercel (frontend) + Render (backend)            |
+
+---
+
+## Project Structure
+
+```
+resumely/
+├── backend/
+│   ├── config/           DB connection, env validation
+│   ├── controllers/      Resume analysis logic
+│   ├── middleware/       JWT auth middleware
+│   ├── models/           Mongoose schemas (User, Resume)
+│   ├── routes/           API routes (auth, resume, career)
+│   ├── services/         AI (Groq), email, cloud storage
+│   ├── utils/            Resume parser, scoring engine
+│   └── server.js         Entry point
+│
+├── frontend/
+│   └── src/
+│       ├── components/   Reusable UI components
+│       ├── context/      Auth context (global state)
+│       ├── layouts/      App shell and navigation
+│       ├── pages/        All page components
+│       └── services/     Axios API service layer
+│
+└── package.json          Root scripts (install:all, dev)
+```
+
+---
+
+## Run Locally
+
+### Prerequisites
+- Node.js v18 or higher
+- MongoDB Atlas account (free)
+- Groq API key (free) at console.groq.com
+
+### 1. Clone the repo
 ```bash
-npm run install:all
+git clone https://github.com/harini-collab/Resumely.git
+cd Resumely
 ```
 
 ### 2. Configure environment
 
-```bash
-cp backend/.env.example backend/.env
-cp frontend/.env.example frontend/.env.development
+Create backend/.env with the following:
+```
+PORT=3500
+NODE_ENV=development
+MONGODB_URI=mongodb+srv://USERNAME:PASSWORD@cluster0.xxxxx.mongodb.net/resumely?retryWrites=true&w=majority
+JWT_SECRET=your-32-char-secret-key-here
+OPENAI_API_KEY=gsk_your_groq_key_here
+OPENAI_MODEL=llama3-8b-8192
+ALLOWED_ORIGINS=http://localhost:3001
+FRONTEND_URL=http://localhost:3001
+REQUIRE_DB_ON_START=false
 ```
 
-Edit `backend/.env` with your MongoDB Atlas URI, JWT secret, and OpenAI key.
+Create frontend/.env.development with the following:
+```
+REACT_APP_API_URL=http://localhost:3500/api
+```
 
-### 3. Start backend (Terminal 1)
-
+### 3. Install and run
 ```bash
-cd backend
+npm run install:all
 npm run dev
 ```
 
-Backend: **http://localhost:5000** — health check at `/health`
-
-### 4. Start frontend (Terminal 2)
-
-```bash
-cd frontend
-npm start
-```
-
-Frontend: **http://localhost:3001**
-
-### Optional: run both with one command
-
-```bash
-npm install          # root — installs concurrently
-npm run dev
-```
+| Service      | URL                          |
+|--------------|------------------------------|
+| Frontend     | http://localhost:3001         |
+| Backend      | http://localhost:3500         |
+| Health Check | http://localhost:3500/health  |
 
 ---
 
-## Production deployment (Render + Vercel)
 
-Deploy the **backend on Render** and the **frontend on Vercel**. MongoDB lives on **MongoDB Atlas** (free tier works).
 
-```
-┌─────────────┐     HTTPS      ┌──────────────┐     HTTPS      ┌─────────────┐
-│   Vercel    │ ──────────────▶│    Render    │ ──────────────▶│   MongoDB   │
-│  (React)    │   API calls    │  (Express)   │   MONGODB_URI  │   Atlas     │
-└─────────────┘                └──────────────┘                └─────────────┘
-```
 
-### Step 0 — Push code to GitHub
-
-The git repo root is this folder (`resumely_fixed/`). Do **not** push `node_modules/`, `.env` files, or `build/`.
-
-```bash
-git add .
-git commit -m "Production-ready deployment config"
-git push origin main
-```
-
----
-
-### Step 1 — MongoDB Atlas
-
-1. Create a free cluster at [mongodb.com/atlas](https://www.mongodb.com/atlas).
-2. Create a database user (username + password).
-3. **Network Access** → Add IP `0.0.0.0/0` (allows Render’s dynamic IPs).
-4. Copy the connection string, e.g.:
-   ```
-   mongodb+srv://USER:PASS@cluster.mongodb.net/resumely
-   ```
-
----
-
-### Step 2 — Deploy backend on Render
-
-1. Go to [render.com](https://render.com) → **New → Web Service**.
-2. Connect your GitHub repo.
-3. Settings:
-
-   | Setting | Value |
-   |---------|-------|
-   | **Root Directory** | `backend` |
-   | **Runtime** | Node |
-   | **Build Command** | `npm install` |
-   | **Start Command** | `npm start` |
-   | **Health Check Path** | `/health` |
-
-4. Add **Environment Variables** (see `backend/.env.example`):
-
-   | Key | Value |
-   |-----|-------|
-   | `NODE_ENV` | `production` |
-   | `MONGODB_URI` | Your Atlas connection string |
-   | `JWT_SECRET` | 64+ char random string (`node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"`) |
-   | `ALLOWED_ORIGINS` | Your Vercel URL (set after Step 3), e.g. `https://resumely.vercel.app` |
-   | `FRONTEND_URL` | Same Vercel URL |
-   | `OPENAI_API_KEY` | Your OpenAI key |
-   | `REQUIRE_DB_ON_START` | `true` |
-   | `CLOUDINARY_CLOUD_NAME` | (optional) |
-   | `CLOUDINARY_API_KEY` | (optional) |
-   | `CLOUDINARY_API_SECRET` | (optional) |
-
-5. Click **Create Web Service**. Note your backend URL, e.g.:
-   ```
-   https://resumely-backend.onrender.com
-   ```
-
-6. Verify: open `https://resumely-backend.onrender.com/health` — should return `"status": "healthy"`.
-
-**Alternative:** use the included `render.yaml` blueprint (**New → Blueprint** → point at repo).
-
----
-
-### Step 3 — Deploy frontend on Vercel
-
-1. Go to [vercel.com](https://vercel.com) → **Add New → Project**.
-2. Import the same GitHub repo.
-3. Settings:
-
-   | Setting | Value |
-   |---------|-------|
-   | **Root Directory** | `frontend` |
-   | **Framework Preset** | Create React App |
-   | **Build Command** | `npm run build` |
-   | **Output Directory** | `build` |
-
-4. **Environment Variables** (must be set **before** the first build):
-
-   | Key | Value |
-   |-----|-------|
-   | `REACT_APP_API_URL` | `https://resumely-backend.onrender.com/api` |
-
-5. Deploy. Note your frontend URL, e.g.:
-   ```
-   https://resumely.vercel.app
-   ```
-
-6. `vercel.json` is included for client-side routing (React Router).
-
----
-
-### Step 4 — Link frontend ↔ backend (CORS)
-
-Go back to **Render → your backend → Environment** and update:
-
-```
-ALLOWED_ORIGINS=https://resumely.vercel.app
-FRONTEND_URL=https://resumely.vercel.app
-```
-
-Replace with your actual Vercel URL. Render will redeploy automatically.
-
----
-
-### Step 5 — Smoke test
-
-1. Open your Vercel URL.
-2. Sign up / log in.
-3. Upload a resume and run analysis.
-4. If API calls fail, check:
-   - `REACT_APP_API_URL` was set in Vercel **before** build (redeploy after changing it).
-   - `ALLOWED_ORIGINS` on Render matches your Vercel URL exactly (no trailing slash).
-   - Render backend `/health` shows `"database": { "state": "connected" }`.
-
----
-
-## Environment variable reference
-
-| File | Purpose |
-|------|---------|
-| `backend/.env.example` | All backend variables with descriptions |
-| `frontend/.env.example` | Frontend API URL |
-
-Never commit `.env` files — they are gitignored.
-
----
-
-## Tech stack
-
-- **Frontend:** React 18, React Router v6, Recharts, Axios
-- **Backend:** Node.js, Express, MongoDB Atlas, OpenAI API
-- **Auth:** JWT
-- **Storage:** Cloudinary (optional) or local `/tmp`
