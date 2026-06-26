@@ -1,0 +1,27 @@
+# Environment files — NEVER commit these
+.env
+.env.local
+.env.development
+.env.production
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Build output
+build/
+dist/
+
+# Uploads
+uploads/
+/tmp/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Tooling caches
+.pnpm-store/

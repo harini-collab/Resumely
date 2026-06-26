@@ -1,0 +1,37 @@
+.jobmatch-page { display:flex; flex-direction:column; gap:20px; animation:fadeIn 0.4s ease; }
+.jm-controls-grid { display:grid; grid-template-columns:1fr 1fr auto; gap:14px; align-items:flex-end; }
+.jm-analyze-btn { display:flex; align-items:flex-end; }
+.jm-analyze-btn .btn { height:42px; }
+.jm-hero-card { display:grid; grid-template-columns:auto 1fr; gap:32px; align-items:center; padding:28px; }
+.jm-hero-left  { display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.jm-hero-title { font-family:var(--font-display); font-size:1.3rem; margin-bottom:6px; }
+.jm-hero-interp { font-size:0.875rem; color:var(--text-muted); margin-bottom:22px; line-height:1.5; }
+.jm-match-bars { display:flex; flex-direction:column; gap:13px; }
+.jm-bar-item   { display:flex; flex-direction:column; gap:5px; }
+.jm-bar-header { display:flex; align-items:center; gap:8px; }
+.jm-bar-label  { flex:1; font-size:0.83rem; color:var(--text-secondary); font-weight:500; }
+.jm-bar-val    { font-size:0.83rem; font-weight:700; min-width:34px; text-align:right; }
+.jm-skills-row { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+.jm-skill-col  { padding:18px 20px; }
+.jm-skill-header { display:flex; align-items:center; gap:8px; font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; padding-bottom:10px; border-bottom:1px solid var(--border); }
+.jm-skill-header-green { color:var(--green-200); }
+.jm-skill-header-red   { color:#e88070; }
+.jm-skill-header-amber { color:#e8c060; }
+.jm-empty-skills { font-size:0.82rem; color:var(--text-muted); font-style:italic; padding:8px 0; }
+.jm-suggestions-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:4px; }
+.jm-suggestion-item { display:flex; align-items:flex-start; gap:10px; padding:11px 13px; background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:var(--radius-sm); font-size:0.82rem; color:var(--text-secondary); line-height:1.5; }
+.jm-suggestion-num { font-family:var(--font-display); font-size:1rem; color:var(--green-700); flex-shrink:0; }
+.jm-placeholder { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:80px 40px; gap:12px; }
+.jm-placeholder-icon { font-size:3rem; color:var(--green-800); animation:float 3s ease-in-out infinite; }
+.jm-placeholder h3 { font-size:1.15rem; }
+.jm-placeholder p  { color:var(--text-muted); max-width:360px; line-height:1.65; font-size:0.88rem; }
+
+@media(max-width:900px){
+  .jm-controls-grid { grid-template-columns:1fr 1fr; }
+  .jm-analyze-btn { grid-column:span 2; }
+  .jm-hero-card { grid-template-columns:1fr; text-align:center; }
+  .jm-hero-left { justify-content:center; }
+  .jm-skills-row { grid-template-columns:1fr; }
+  .jm-suggestions-grid { grid-template-columns:1fr; }
+}
+@media(max-width:600px){ .jm-controls-grid { grid-template-columns:1fr; } .jm-analyze-btn { grid-column:auto; } }
